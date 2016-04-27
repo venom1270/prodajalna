@@ -170,6 +170,12 @@
 		</PodatkiPodjetja>
 		<!-- naročnik -->
 		<PodatkiPodjetja>
+			
+			<%
+				if (typeof strankaPodatki === 'undefined') {
+					
+			%>
+			
 			<NazivNaslovPodjetja>
 				<VrstaPartnerja>BY</VrstaPartnerja>
 				<NazivPartnerja>
@@ -221,6 +227,60 @@
 					<VrstaKomunikacije>FX</VrstaKomunikacije>
 				</Komunikacije>
 			</KontaktiPodjetja>
+			
+			<% } else { %>
+			
+				
+				<NazivNaslovPodjetja>
+				<VrstaPartnerja>BY</VrstaPartnerja>
+				<NazivPartnerja>
+					<NazivPartnerja1><%= strankaPodatki[0].FirstName + " " + strankaPodatki[0].LastName %></NazivPartnerja1>
+					<NazivPartnerja2><%= strankaPodatki[0].Company %></NazivPartnerja2>
+				</NazivPartnerja>
+				<Ulica>
+					<Ulica1><%= strankaPodatki[0].Address %></Ulica1>
+				</Ulica>
+				<Kraj><%= strankaPodatki[0].City %></Kraj>
+				<NazivDrzave><%= strankaPodatki[0].Country %></NazivDrzave>
+				<PostnaStevilka><%= strankaPodatki[0].PostalCode %></PostnaStevilka>
+				<KodaDrzave></KodaDrzave>
+			</NazivNaslovPodjetja>
+			<FinancniPodatkiPodjetja>
+				<BancniRacun>
+					<StevilkaBancnegaRacuna></StevilkaBancnegaRacuna>
+					<NazivBanke1></NazivBanke1>
+					<NazivBanke2></NazivBanke2>
+					<BIC></BIC>
+				</BancniRacun>
+			</FinancniPodatkiPodjetja>
+			<ReferencniPodatkiPodjetja>
+				<VrstaPodatkaPodjetja></VrstaPodatkaPodjetja>
+				<PodatekPodjetja></PodatekPodjetja>
+			</ReferencniPodatkiPodjetja>
+			<ReferencniPodatkiPodjetja>
+				<VrstaPodatkaPodjetja></VrstaPodatkaPodjetja>
+				<PodatekPodjetja></PodatekPodjetja>
+			</ReferencniPodatkiPodjetja>
+			<ReferencniPodatkiPodjetja>
+				<VrstaPodatkaPodjetja></VrstaPodatkaPodjetja>
+				<PodatekPodjetja></PodatekPodjetja>
+			</ReferencniPodatkiPodjetja>
+			<KontaktiPodjetja>
+				<KontaktnaOseba>
+					<ImeOsebe><%= strankaPodatki[0].FirstName + " " + strankaPodatki[0].LastName + " (" + strankaPodatki[0].Email + ")" %></ImeOsebe>
+				</KontaktnaOseba>
+				<Komunikacije>
+					<StevilkaKomunikacije><%= strankaPodatki[0].Phone %></StevilkaKomunikacije>
+					<VrstaKomunikacije>TE</VrstaKomunikacije>
+				</Komunikacije>
+				<Komunikacije>
+					<StevilkaKomunikacije><%= strankaPodatki[0].Fax %></StevilkaKomunikacije>
+					<VrstaKomunikacije>FX</VrstaKomunikacije>
+				</Komunikacije>
+			</KontaktiPodjetja>
+			
+			
+			<% } %>
 		</PodatkiPodjetja>
 		<!-- prejemnik -->
 		<PodatkiPodjetja>
