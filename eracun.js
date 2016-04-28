@@ -49,7 +49,7 @@ function davcnaStopnja(izvajalec, zanr) {
 streznik.get('/', function(zahteva, odgovor) {
   var session = zahteva.expressSession;
   
-  if (expressSession.Username == null) {
+  if (zahteva.session.Username == null) {
     odgovor.redirect("/prijava");
     return;
   }
@@ -241,14 +241,15 @@ streznik.post('/stranka', function(zahteva, odgovor) {
   
   form.parse(zahteva, function (napaka1, polja, datoteke) {
     //console.log(polja);
-    expressSession.Username = polja.seznamStrank; //zaporedna stevilka stranke na seznamu
+    //console.log(zahteva.session);
+    zahteva.session.Username = polja.seznamStrank; //zaporedna stevilka stranke na seznamu
     odgovor.redirect('/')
   });
 })
 
 // Odjava stranke
 streznik.post('/odjava', function(zahteva, odgovor) {
-    expressSession.Username = null;
+    zahteva.session.Username = null;
     odgovor.redirect('/prijava') 
 })
 
