@@ -219,20 +219,18 @@ streznik.post('/prijava', function(zahteva, odgovor) {
       napaka2 = true;
     }
     
-    if (napaka2) {
-      vrniStranke(function(napaka1, stranke) {
-        vrniRacune(function(napaka2, racuni) {
+
+    vrniStranke(function(napaka3, stranke) {
+      vrniRacune(function(napaka4, racuni) {
+        if (napaka2 || napaka3 || napaka4) {
           odgovor.render('prijava', {sporocilo: "Prišlo je do napake pri registraciji nove stranke. Prosim preverite vnešene podatke in poskusite znova.", seznamStrank: stranke, seznamRacunov: racuni});  
-        }) 
-      });
-    } else {
-      vrniStranke(function(napaka1, stranke) {
-        vrniRacune(function(napaka2, racuni) {
+        } else {
           odgovor.render('prijava', {sporocilo: "Stranka je bila uspešno registrirana.", seznamStrank: stranke, seznamRacunov: racuni});  
-        }) 
-      });
-      
-    }
+        }
+      }) 
+    });
+
+    
   
     //odgovor.end();
   });
