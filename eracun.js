@@ -48,8 +48,8 @@ function davcnaStopnja(izvajalec, zanr) {
 // Prikaz seznama pesmi na strani
 streznik.get('/', function(zahteva, odgovor) {
   var session = zahteva.expressSession;
-  
-  if (expressSession.Username == null) {
+  console.log(zahteva.session);
+  if (zahteva.session.Username == null) {
     odgovor.redirect("/prijava");
     return;
   }
@@ -160,12 +160,12 @@ streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
 
 // Izpis računa v HTML predstavitvi ali izvorni XML obliki
 streznik.get('/izpisiRacun/:oblika', function(zahteva, odgovor) {
-  if (expressSession.Username == null) {
+  if (zahteva.session.Username == null) {
     odgovor.redirect("/prijava");
     return;
   }
   pesmiIzKosarice(zahteva, function(pesmi) {
-    vrniPodatkeStranke(expressSession.Username, function(napaka, stranka) {
+    vrniPodatkeStranke(zahteva.session.Username, function(napaka, stranka) {
       if (!pesmi) {
         odgovor.sendStatus(500);
       } else if (pesmi.length == 0) {
@@ -258,14 +258,14 @@ streznik.post('/stranka', function(zahteva, odgovor) {
   
   form.parse(zahteva, function (napaka1, polja, datoteke) {
     //console.log(polja);
-    expressSession.Username = polja.seznamStrank; //zaporedna stevilka stranke na seznamu
+    zahteva.session.Username = polja.seznamStrank; //zaporedna stevilka stranke na seznamu
     odgovor.redirect('/')
   });
 })
 
 // Odjava stranke
 streznik.post('/odjava', function(zahteva, odgovor) {
-    expressSession.Username = null;
+    zahteva.session.Username = null;
     odgovor.redirect('/prijava') 
 })
 
