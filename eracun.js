@@ -48,7 +48,7 @@ function davcnaStopnja(izvajalec, zanr) {
 // Prikaz seznama pesmi na strani
 streznik.get('/', function(zahteva, odgovor) {
   var session = zahteva.expressSession;
-  
+
   if (zahteva.session.Username == null) {
     odgovor.redirect("/prijava");
     return;
@@ -174,26 +174,43 @@ streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
 
 // Izpis računa v HTML predstavitvi ali izvorni XML obliki
 streznik.get('/izpisiRacun/:oblika', function(zahteva, odgovor) {
+  if (zahteva.session.Username == null) {
+    odgovor.redirect("/prijava");
+    return;
+  }
   pesmiIzKosarice(zahteva, function(pesmi) {
-    if (!pesmi) {
-      odgovor.sendStatus(500);
-    } else if (pesmi.length == 0) {
-      odgovor.send("<p>V košarici nimate nobene pesmi, \
-        zato računa ni mogoče pripraviti!</p>");
-    } else {
-      odgovor.setHeader('content-type', 'text/xml');
-      odgovor.render('eslog', {
-        vizualiziraj: zahteva.params.oblika == 'html' ? true : false,
-        postavkeRacuna: pesmi
-      })  
-    }
-  })
+    vrniPodatkeStranke(zahteva.session.Username, function(napaka, stranka) {
+      if (!pesmi) {
+        odgovor.sendStatus(500);
+      } else if (pesmi.length == 0) {
+        odgovor.send("<p>V košarici nimate nobene pesmi, \
+          zato računa ni mogoče pripraviti!</p>");
+      } else {
+        console.log(stranka);
+        odgovor.setHeader('content-type', 'text/xml');
+        odgovor.render('eslog', {
+          vizualiziraj: zahteva.params.oblika == 'html' ? true : false,
+          postavkeRacuna: pesmi,
+          strankaPodatki: stranka
+        });  
+      }
+    });
+  });
 })
 
 // Privzeto izpiši račun v HTML obliki
 streznik.get('/izpisiRacun', function(zahteva, odgovor) {
   odgovor.redirect('/izpisiRacun/html')
 })
+
+// Vrni podatke o strani
+var vrniPodatkeStranke = function(id, callback) {
+  pb.all("SELECT * FROM Customer WHERE Customer.CustomerId = "+id,
+    function(napaka, vrstice) {
+      callback(napaka, vrstice);
+    }
+  );
+}
 
 // Vrni stranke iz podatkovne baze
 var vrniStranke = function(callback) {
@@ -271,8 +288,6 @@ streznik.post('/stranka', function(zahteva, odgovor) {
   var form = new formidable.IncomingForm();
   
   form.parse(zahteva, function (napaka1, polja, datoteke) {
-    //console.log(polja);
-    //console.log(zahteva.session);
     zahteva.session.Username = polja.seznamStrank; //zaporedna stevilka stranke na seznamu
     odgovor.redirect('/')
   });
